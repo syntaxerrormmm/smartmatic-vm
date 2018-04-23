@@ -52,23 +52,28 @@ In particolare, parliamo dei seguenti dispositivi:
 * Scheda wireless: il chipset è Broadcom 43430 su bus SDIO, quindi non compare
   nell'output di `lspci` né `lsusb` (lo si può tuttavia vedere abbozzato
 utilizzando `hwinfo`). Il driver è nel kernel almeno dalla versione 4.9 in su
-(`brcmfmac`), ma necessita di alcuni file aggiuntivi che non vengono
+(`brcmfmac`), ma necessita di alcuni [file
+aggiuntivi](http://jwrdegoede.danny.cz/brcm-firmware/) che non vengono
 distribuiti con i firmware né con i driver del kernel;
 * Scheda audio: il chipset è Realtek 5640, il driver è nel kernel ma
   PulseAudio si rifiuta di utilizzarlo. Sono necessari dei [file
 aggiuntivi](https://github.com/plbossart/UCM/tree/master/bytcr-rt5640);
-* Scheda BlueTooth: ancora non testata.
+* Scheda BlueTooth: ND
+* Stampante termica: ND
+* Regolazione della luminosità: non funzionante con sistema nativo. Non sono
+  stati effettuati altri test
 
 ## Linuxium ##
 
 Il sito web [Linuxium](http://linuxiumcomau.blogspot.com/) si presenta come
 una buona fonte di informazioni sul supporto con Linux delle piattaforme Intel
-Cherry Tail (Atom Z8500).
+Cherry Trail (Atom Z8500).
 
 Alcune risorse interessanti:
 
-* [Linuxium `isorespin.sh` script](http://linuxiumcomau.blogspot.com/2018/04/latest-improvements-to-isorespinsh.html): aggiunge supporto per Intel Cherry Trail, su cui si basa la VM;
+* [Linuxium `isorespin.sh` script](http://linuxiumcomau.blogspot.com/2018/04/latest-improvements-to-isorespinsh.html): aggiunge supporto per Intel Cherry Trail, su cui si basa la VM alle distro Ubuntu-based e Mint;
 * [Documentazione dello script `isorespin.sh`](http://linuxiumcomau.blogspot.com/2017/06/customizing-ubuntu-isos-documentation.html)
+* [File dei firmware per BCM43430](http://jwrdegoede.danny.cz/brcm-firmware/)
 * [Repository dei fix per l'audio](https://github.com/plbossart/UCM)
 
 ## Fix personali per Ubuntu ##
