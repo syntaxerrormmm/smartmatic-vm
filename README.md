@@ -25,8 +25,10 @@ menù di GRUB di Ubuntu-GNOME per accedere alle impostazioni del firmware.
 
 Dall'interno delle impostazioni del firmware è pressoché impossibile scegliere
 un dispositivo di boot differente da quelli già impostati; più semplice
-utilizzare *EFI Shell*, attendere il caricamento e puntare direttamente il
-file `.efi` contenuto nel dispositivo da avviare.
+utilizzare *EFI Shell* (qualche istruzione per l'utilizzo
+[qui](https://downloadmirror.intel.com/16018/eng/EFI_Deployment.pdf)),
+attendere il caricamento e puntare direttamente il file `.efi` contenuto nel
+dispositivo da avviare.
 
 Per esempio, se sto utilizzando una chiavetta USB (dispositivo esterno) per
 effettuare il boot con un'altro sistema operativo, dovrò accedere al
