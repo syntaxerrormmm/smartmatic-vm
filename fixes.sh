@@ -8,4 +8,9 @@ function wireless() {
   modprobe brcmfmac
 }
 
+# Audio
+function audio() {
+  sed -i -e 's/^#load-module module-alsa-source device=/load-module module-alsa-source device=hw:1,0/' /etc/pulse/default.pa
+}
+
 $@

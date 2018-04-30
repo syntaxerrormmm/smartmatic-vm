@@ -58,18 +58,35 @@ utilizzando `hwinfo`). Il driver è nel kernel almeno dalla versione 4.9 in su
 aggiuntivi](http://jwrdegoede.danny.cz/brcm-firmware/) che non vengono
 distribuiti con i firmware né con i driver del kernel;
 * Scheda audio: il chipset è Realtek 5640, il driver è nel kernel ma
-  PulseAudio si rifiuta di utilizzarlo. Sono necessari dei [file
-aggiuntivi](https://github.com/plbossart/UCM/tree/master/bytcr-rt5640);
-* Scheda BlueTooth: ND
+  PulseAudio ha un altro dispositivo impostato per default e quindi non riesce
+ad attivarlo. Bisogna decommentare la seguente riga nel file
+`/etc/pulse/default.pa` per far funzionare l'audio:
+```
+load-module module-alsa-source device=hw:1,0
+```
+* Scheda BlueTooth: ci sono [firmware e un'utility per
+  l'avvio](https://github.com/lwfinger/rtl8723bs_bt) in un repository, ma la
+compilazione in locale non sembra aver dato i risultati attesi.
 * Stampante termica: ND
 * Regolazione della luminosità: non funzionante con sistema nativo. Non sono
-  stati effettuati altri test
+  stati effettuati altri test.
 
 ## Linuxium ##
 
 Il sito web [Linuxium](http://linuxiumcomau.blogspot.com/) si presenta come
 una buona fonte di informazioni sul supporto con Linux delle piattaforme Intel
-Cherry Trail (Atom Z8500).
+Cherry Trail (Atom Z8500). L'autore ha lavorato su diversi fix per i
+principali problemi segnalati sopra e ha preparato uno script (`isorespin.sh`)
+per *patchare* l'immagine ISO di installazione di diversi sistemi Ubuntu-based
+(anche Mint).
+
+Di seguito i risultati dell'applicazione dello script `isorespin.sh` con una
+Xubuntu 18.04 LTS «Bionic Beaver» a 64 bit:
+
+* La wireless viene riconosciuta già in fase di installazione;
+* Installazione Xubuntu classica, con aggiornamento online dei pacchetti;
+* Al termine dell'installazione, solo la wireless funziona correttamente (no
+  BlueTooth, no audio).
 
 Alcune risorse interessanti:
 
@@ -77,6 +94,7 @@ Alcune risorse interessanti:
 * [Documentazione dello script `isorespin.sh`](http://linuxiumcomau.blogspot.com/2017/06/customizing-ubuntu-isos-documentation.html)
 * [File dei firmware per BCM43430](http://jwrdegoede.danny.cz/brcm-firmware/)
 * [Repository dei fix per l'audio](https://github.com/plbossart/UCM)
+* [Repository per i fix BlueTooth](https://github.com/lwfinger/rtl8723bs_bt)
 
 ## Fix personali per Ubuntu ##
 
@@ -88,3 +106,5 @@ Dove `<oggetto>` può essere uno dei seguenti fix:
 
 * `wireless`: scarica il file mancante che istruisce il firmware a caricarsi,
   quindi scarica e ricarica il modulo del kernel;
+* `audio`: sistema il file principale di PulseAudio per far funzionare
+  l'audio. &Egrave; necessario un riavvio per il corretto funzionamento;
