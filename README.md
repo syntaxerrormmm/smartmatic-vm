@@ -57,19 +57,44 @@ utilizzando `hwinfo`). Il driver è nel kernel almeno dalla versione 4.9 in su
 (`brcmfmac`), ma necessita di alcuni [file
 aggiuntivi](http://jwrdegoede.danny.cz/brcm-firmware/) che non vengono
 distribuiti con i firmware né con i driver del kernel;
-* Scheda audio: il chipset è Realtek 5640, il driver è nel kernel ma
-  PulseAudio ha un altro dispositivo impostato per default e quindi non riesce
-ad attivarlo. Bisogna decommentare la seguente riga nel file
-`/etc/pulse/default.pa` per far funzionare l'audio:
-```
-load-module module-alsa-source device=hw:1,0
-```
-* Scheda BlueTooth: ci sono [firmware e un'utility per
-  l'avvio](https://github.com/lwfinger/rtl8723bs_bt) in un repository, ma la
-compilazione in locale non sembra aver dato i risultati attesi.
+* Scheda audio: il chipset è Realtek 5645, il driver è nel kernel
+  (`snd_soc_rt5645`) ma viene caricato assieme ad un altro e sia alsa chee
+PulseAudio non sono in grado di utilizzarlo correttamente. &Egrave; necessario
+caricare l'uno e blacklistare l'altro, quindi configurare correttamente il
+dispositivo di output da PulseAudio (si veda parte sottostante).
 * Stampante termica: ND
 * Regolazione della luminosità: non funzionante con sistema nativo. Non sono
   stati effettuati altri test.
+
+## Attivazione dell'audio ##
+
+Il kernel `linux` in versione 4.15 ha internamente i driver per la scheda
+audio integrata (il chipset è Realtek 5645 e il driver relativo è
+`snd-soc-rt5645`), ma viene caricato contemporaneamente ad un altro driver
+(che sfortunatamente ha la priorità) la quale scheda non è presente a sistema
+e pertanto non funziona correttamente.
+
+&Egrave; pertanto possibile correggere il funzionamento della scheda audio
+effettuando le seguenti modifiche:
+
+* Nel file `/etc/modules`, che indica quali driver del kernel caricare
+  all'avvio, forzare il caricamento del driver `snd_soc_rt5645`:
+```
+echo 'snd_soc_rt5645' | sudo tee -a /etc/modules
+```
+* Nel file `/etc/modprobe.d/blacklist.conf`, aggiungere un'esclusione per il
+  driver confliggente:
+```
+cat <EOF | sudo tee -a /etc/modprobe.d/blacklist.conf
+# Blacklisto il driver intel hdmi
+blacklist snd_hdmi_lpe_audio
+EOF
+```
+* Riavviare il sistema;
+* Dopo il riavvio, accedere al pannello di configurazione dell'audio (clic
+  sinistro, *Mixer audio* oppure a linea di comando lanciando il comando
+`pavucontrol`) e selezionare come dispositivo di output per la riproduzione
+*Speaker* (con gli altri canali non funziona).
 
 ## Linuxium ##
 
@@ -80,15 +105,11 @@ principali problemi segnalati sopra e ha preparato uno script (`isorespin.sh`)
 per *patchare* l'immagine ISO di installazione di diversi sistemi Ubuntu-based
 (anche Mint).
 
-Di seguito i risultati dell'applicazione dello script `isorespin.sh` con una
-Xubuntu 18.04 LTS «Bionic Beaver» a 64 bit:
+Utilizzando lo script indicato con l'immagine iso di Xubuntu 18.04 LTS «Bionic
+Beaver» a 64 bit, l'unico risultato che si ottiene è quello di avere la scheda
+wireless funzionante già dall'installazione.
 
-* La wireless viene riconosciuta già in fase di installazione;
-* Installazione Xubuntu classica, con aggiornamento online dei pacchetti;
-* Al termine dell'installazione, solo la wireless funziona correttamente (no
-  BlueTooth, no audio).
-
-Alcune risorse interessanti:
+## Altre risorse ##
 
 * [Linuxium `isorespin.sh` script](http://linuxiumcomau.blogspot.com/2018/04/latest-improvements-to-isorespinsh.html): aggiunge supporto per Intel Cherry Trail, su cui si basa la VM alle distro Ubuntu-based e Mint;
 * [Documentazione dello script `isorespin.sh`](http://linuxiumcomau.blogspot.com/2017/06/customizing-ubuntu-isos-documentation.html)
